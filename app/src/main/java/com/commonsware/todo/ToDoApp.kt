@@ -12,6 +12,7 @@ class ToDoApp: Application() {
     private val koinModule = module {
         single { ToDoRepository() }
         viewModel { RosterMotor(get()) }
+        viewModel { (modelId: String) -> SingleModelMotor(get(), modelId) }
     }
 
     override fun onCreate() {
