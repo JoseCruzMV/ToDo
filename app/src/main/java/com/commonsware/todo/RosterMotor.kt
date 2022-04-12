@@ -7,4 +7,7 @@ class RosterMotor(
 ): ViewModel() {
     val items = repo.items
 
+    fun save(model: ToDoModel) {
+        repo.save(model)
+    }
 }
