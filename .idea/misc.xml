@@ -6,9 +6,11 @@
         <entry key="..\:/Users/josec/Desktop/ToDo-Starter/ToDo/app/src/main/res/layout/activity_about.xml" value="0.25" />
         <entry key="..\:/Users/josec/Desktop/ToDo-Starter/ToDo/app/src/main/res/layout/activity_main.xml" value="0.14349775784753363" />
         <entry key="..\:/Users/josec/Desktop/ToDo-Starter/ToDo/app/src/main/res/layout/todo_display.xml" value="0.25" />
+        <entry key="..\:/Users/josec/Desktop/ToDo-Starter/ToDo/app/src/main/res/layout/todo_edit.xml" value="0.22" />
         <entry key="..\:/Users/josec/Desktop/ToDo-Starter/ToDo/app/src/main/res/layout/todo_roster.xml" value="0.1" />
         <entry key="..\:/Users/josec/Desktop/ToDo-Starter/ToDo/app/src/main/res/layout/todo_row.xml" value="0.15609756097560976" />
         <entry key="..\:/Users/josec/Desktop/ToDo-Starter/ToDo/app/src/main/res/menu/actions.xml" value="0.25" />
+        <entry key="..\:/Users/josec/Desktop/ToDo-Starter/ToDo/app/src/main/res/menu/actions_display.xml" value="0.14" />
       </map>
     </option>
   </component>

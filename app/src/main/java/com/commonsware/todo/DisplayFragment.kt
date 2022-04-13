@@ -2,10 +2,9 @@ package com.commonsware.todo
 
 import android.os.Bundle
 import android.text.format.DateUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.commonsware.todo.databinding.TodoDisplayBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -16,6 +15,12 @@ class DisplayFragment : Fragment() {
     private val args: DisplayFragmentArgs by navArgs()
     private var binding: TodoDisplayBinding? = null
     private val motor: SingleModelMotor by viewModel { parametersOf(args.modelId) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,5 +50,27 @@ class DisplayFragment : Fragment() {
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.actions_display, menu)
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.edit -> {
+                edit()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun edit() {
+        findNavController().navigate(
+            DisplayFragmentDirections.editModel(args.modelId)
+        )
     }
 }
