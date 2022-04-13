@@ -7,4 +7,6 @@ class SingleModelMotor(
     private val modelId: String,
 ) : ViewModel() {
     fun getModel() = repo.find(modelId = modelId)
+
+    fun save(model: ToDoModel) = repo.save(model = model)
 }
