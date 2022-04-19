@@ -9,4 +9,6 @@ class SingleModelMotor(
     fun getModel() = repo.find(modelId = modelId)
 
     fun save(model: ToDoModel) = repo.save(model = model)
+
+    fun delete(model: ToDoModel) = repo.delete(model = model)
 }
