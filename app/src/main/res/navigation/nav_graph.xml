@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/rosterListFragment"
-        android:name="com.commonsware.todo.RosterListFragment"
+        android:name="com.commonsware.todo.ui.roster.RosterListFragment"
         android:label="@string/app_name">
         <action
             android:id="@+id/displayModel"
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/displayFragment"
-        android:name="com.commonsware.todo.DisplayFragment"
+        android:name="com.commonsware.todo.ui.display.DisplayFragment"
         android:label="@string/app_name" >
         <argument
             android:name="modelId"
@@ -32,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/editFragment"
-        android:name="com.commonsware.todo.EditFragment"
+        android:name="com.commonsware.todo.ui.edit.EditFragment"
         android:label="@string/app_name" >
         <argument
             android:name="modelId"

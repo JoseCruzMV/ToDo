@@ -1,4 +1,4 @@
-package com.commonsware.todo
+package com.commonsware.todo.ui.display
 
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -6,10 +6,11 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.commonsware.todo.R
 import com.commonsware.todo.databinding.TodoDisplayBinding
+import com.commonsware.todo.ui.SingleModelMotor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import java.util.*
 
 class DisplayFragment : Fragment() {
     private val args: DisplayFragmentArgs by navArgs()

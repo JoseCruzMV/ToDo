@@ -1,6 +1,9 @@
 package com.commonsware.todo
 
 import android.app.Application
+import com.commonsware.todo.repo.ToDoRepository
+import com.commonsware.todo.ui.SingleModelMotor
+import com.commonsware.todo.ui.roster.RosterMotor
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin

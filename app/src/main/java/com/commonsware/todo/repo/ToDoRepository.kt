@@ -1,4 +1,4 @@
-package com.commonsware.todo
+package com.commonsware.todo.repo
 
 class ToDoRepository {
     /*var items = listOf(

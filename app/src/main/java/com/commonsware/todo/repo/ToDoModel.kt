@@ -1,4 +1,4 @@
-package com.commonsware.todo
+package com.commonsware.todo.repo
 
 import java.time.Instant
 import java.util.UUID

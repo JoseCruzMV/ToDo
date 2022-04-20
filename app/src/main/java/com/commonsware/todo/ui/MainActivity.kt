@@ -1,4 +1,4 @@
-package com.commonsware.todo
+package com.commonsware.todo.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.commonsware.todo.R
 import com.commonsware.todo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
