@@ -16,16 +16,18 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 
-class ToDoApp: Application() {
+class ToDoApp : Application() {
     private val koinModule = module {
-        single { ToDoRepository(
-            get<ToDoDatabase>().todoStore(),
-            get(named("appScope"))
-        ) }
+        single(named("appScope")) { CoroutineScope(SupervisorJob()) }
+        single { ToDoDatabase.newInstance(androidContext()) }
+        single {
+            ToDoRepository(
+                get<ToDoDatabase>().todoStore(),
+                get(named("appScope"))
+            )
+        }
         viewModel { RosterMotor(get()) }
         viewModel { (modelId: String) -> SingleModelMotor(get(), modelId) }
-        single { ToDoDatabase.newInstance(androidContext()) }
-        single(named("appScope")) { CoroutineScope(SupervisorJob()) }
     }
 
     override fun onCreate() {

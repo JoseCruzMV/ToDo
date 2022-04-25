@@ -5,12 +5,14 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.commonsware.todo.R
 import com.commonsware.todo.databinding.TodoEditBinding
 import com.commonsware.todo.repo.ToDoModel
 import com.commonsware.todo.ui.SingleModelMotor
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -35,11 +37,17 @@ class EditFragment : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        motor.getModel()?.let {
-            binding?.apply {
-                isCompleted.isChecked = it.isCompleted
-                desc.setText(it.description)
-                notes.setText(it.notes)
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            motor.states.collect { state ->
+                if (savedInstanceState == null) {
+                    state.item?.let {
+                        binding?.apply {
+                            isCompleted.isChecked = it.isCompleted
+                            desc.setText(it.description)
+                            notes.setText(it.notes)
+                        }
+                    }
+                }
             }
         }
     }
@@ -73,7 +81,7 @@ class EditFragment : Fragment() {
 
     private fun save() {
         binding?.apply {
-            val model = motor.getModel()
+            val model = motor.states.value.item
             val edited = model?.copy(
                 description = desc.text.toString(),
                 isCompleted = isCompleted.isChecked,
@@ -90,7 +98,7 @@ class EditFragment : Fragment() {
     }
 
     private fun delete() {
-        val model = motor.getModel()
+        val model = motor.states.value.item
 
         model?.let { motor.delete(it) }
         navToList()

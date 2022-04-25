@@ -38,7 +38,7 @@ data class ToDoEntity(
         fun all(): Flow<List<ToDoEntity>>
 
         @Query("SELECT * FROM todos WHERE id = :modelId")
-        fun find(modelId: String?): Flow<ToDoEntity>
+        fun find(modelId: String?): Flow<ToDoEntity?>
 
         @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun save(vararg entities: ToDoEntity)

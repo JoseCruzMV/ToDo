@@ -14,8 +14,7 @@ abstract class ToDoDatabase : RoomDatabase() {
     abstract fun todoStore(): ToDoEntity.Store
 
     companion object {
-        fun newInstance(context: Context) = Room
-            .databaseBuilder(context, ToDoDatabase::class.java, DB_NAME)
-            .build()
+        fun newInstance(context: Context) =
+            Room.databaseBuilder(context, ToDoDatabase::class.java, DB_NAME).build()
     }
 }

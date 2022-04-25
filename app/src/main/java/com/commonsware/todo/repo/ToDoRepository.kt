@@ -9,16 +9,14 @@ class ToDoRepository(
     private val store: ToDoEntity.Store,
     private val appScope: CoroutineScope
 ) {
-    fun items(): Flow<List<ToDoModel>> = store
-        .all()
-        .map { all -> all.map { it.toModel() } }
+    fun items(): Flow<List<ToDoModel>> =
+        store.all().map { all -> all.map { it.toModel() } }
 
-    fun find(id: String?): Flow<ToDoModel?> = store.find(id)
-        .map { it?.toModel() }
+    fun find(id: String?): Flow<ToDoModel?> = store.find(id).map { it?.toModel() }
 
     suspend fun save(model: ToDoModel) {
         withContext(appScope.coroutineContext) {
-            store.delete(ToDoEntity(model))
+            store.save(ToDoEntity(model))
         }
     }
 
