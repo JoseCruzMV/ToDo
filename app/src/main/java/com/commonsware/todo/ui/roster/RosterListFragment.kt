@@ -63,8 +63,10 @@ class RosterListFragment : Fragment() {
                 adapter.submitList(state.items)
 
                 binding?.apply {
+                    loading.visibility = if(state.isLoaded) View.GONE else View.VISIBLE
+
                     when {
-                        state.items.isEmpty() -> {
+                        state.items.isEmpty() && state.isLoaded -> {
                             empty.visibility = View.VISIBLE
                             empty.setText(R.string.msg_empty)
                         }
@@ -73,8 +75,6 @@ class RosterListFragment : Fragment() {
                 }
             }
         }
-
-        binding?.empty?.visibility = View.GONE
     }
 
     override fun onDestroyView() {

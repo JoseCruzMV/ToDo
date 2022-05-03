@@ -10,14 +10,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class RosterViewState(
-    val items: List<ToDoModel> = listOf()
+    val items: List<ToDoModel> = listOf(),
+    val isLoaded: Boolean = false
 )
 
 class RosterMotor(
     private val repo: ToDoRepository
 ): ViewModel() {
     val states = repo.items()
-        .map { RosterViewState(it) }
+        .map { RosterViewState(it, isLoaded = true) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, RosterViewState())
 
 
