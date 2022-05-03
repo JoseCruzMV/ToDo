@@ -38,6 +38,11 @@ android {
   buildFeatures {
     viewBinding = true
   }
+
+  packagingOptions {
+    exclude 'META_INF/AL2.0'
+    exclude 'META-INF/LGPL2.1'
+  }
 }
 
 dependencies {
@@ -65,4 +70,8 @@ dependencies {
   testImplementation "org.mockito:mockito-inline:3.12.1"
   testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
   testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1"
+
+  //Instrumented test
+  androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+  androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1"
 }
