@@ -45,5 +45,8 @@ data class ToDoEntity(
 
         @Delete
         suspend fun delete(vararg entities: ToDoEntity)
+
+        @Query("SELECT * FROM todos WHERE isCompleted = :isCompleted ORDER BY description")
+        fun filtered(isCompleted: Boolean): Flow<List<ToDoEntity>>
     }
 }

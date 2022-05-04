@@ -10,4 +10,9 @@
     <string name="menu_save">Save</string>
     <string name="menu_add">Add</string>
     <string name="menu_delete">Delete</string>
+    <string name="menu_filter">Filter</string>
+    <string name="menu_filter_all">All</string>
+    <string name="menu_filter_completed">Completed</string>
+    <string name="menu_filter_outstanding">Outstanding</string>
+    <string name="msg_empty_filtered">Click the + icon to add a todo item, or change your filter to show other items</string>
 </resources>
