@@ -1,7 +1,12 @@
 package com.commonsware.todo.ui.roster
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,11 +20,20 @@ import com.commonsware.todo.repo.ToDoModel
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+private const val TAG = "ToDo"
+
 class RosterListFragment : Fragment() {
 
     private val motor: RosterMotor by viewModel()
     private var binding: TodoRosterBinding? = null
     private val menuMap = mutableMapOf<FilterMode, MenuItem>()
+
+    private val createDoc =
+        registerForActivityResult(ActivityResultContracts.CreateDocument()){
+            motor.saveReport(it)
+        }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +97,14 @@ class RosterListFragment : Fragment() {
                 menuMap[state.filterMode]?.isChecked = true
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            motor.navEvents.collect() { nav ->
+                when(nav) {
+                    is Nav.ViewReport -> viewReport(nav.doc)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -125,6 +147,10 @@ class RosterListFragment : Fragment() {
                 motor.load(filterMode = FilterMode.OUTSTANDING)
                 true
             }
+            R.id.save -> {
+                saveReport()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -137,5 +163,24 @@ class RosterListFragment : Fragment() {
     private fun add() {
         findNavController()
             .navigate(RosterListFragmentDirections.createModel(null))
+    }
+
+    private fun saveReport() {
+        createDoc.launch("report.html")
+    }
+
+    private fun safeStarActivity(intent: Intent) {
+        try {
+            startActivity(intent)
+        } catch (t: Throwable) {
+            Log.e(TAG, "Exception starting $intent", t)
+            Toast.makeText(requireActivity(), R.string.oops, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun viewReport(uri: Uri) {
+        safeStarActivity(
+            Intent(Intent.ACTION_VIEW, uri).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        )
     }
 }

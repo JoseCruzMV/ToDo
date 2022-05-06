@@ -30,4 +30,9 @@
         android:icon="@drawable/ic_add"
         android:title="@string/menu_add"
         app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/save"
+        android:icon="@drawable/ic_save"
+        android:title="@string/menu_save"
+        app:showAsAction="ifRoom|withText" />
 </menu>

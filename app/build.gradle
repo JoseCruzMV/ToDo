@@ -74,4 +74,7 @@ dependencies {
   //Instrumented test
   androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
   androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1"
+
+  //Handlebars
+  implementation "com.github.jknack:handlebars:4.1.2"
 }
