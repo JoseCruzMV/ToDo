@@ -99,9 +99,10 @@ class RosterListFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            motor.navEvents.collect() { nav ->
-                when(nav) {
+            motor.navEvents.collect { nav ->
+                when (nav) {
                     is Nav.ViewReport -> viewReport(nav.doc)
+                    is Nav.ShareReport -> shareReport(nav.doc)
                 }
             }
         }
@@ -151,6 +152,10 @@ class RosterListFragment : Fragment() {
                 saveReport()
                 true
             }
+            R.id.share -> {
+                motor.shareReport()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -169,6 +174,21 @@ class RosterListFragment : Fragment() {
         createDoc.launch("report.html")
     }
 
+    private fun viewReport(uri: Uri) {
+        safeStarActivity(
+            Intent(Intent.ACTION_VIEW, uri).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        )
+    }
+
+    private fun shareReport(doc: Uri) {
+        safeStarActivity(
+            Intent(Intent.ACTION_SEND)
+                .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                .setType("text/html")
+                .putExtra(Intent.EXTRA_STREAM, doc)
+        )
+    }
+
     private fun safeStarActivity(intent: Intent) {
         try {
             startActivity(intent)
@@ -176,11 +196,5 @@ class RosterListFragment : Fragment() {
             Log.e(TAG, "Exception starting $intent", t)
             Toast.makeText(requireActivity(), R.string.oops, Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun viewReport(uri: Uri) {
-        safeStarActivity(
-            Intent(Intent.ACTION_VIEW, uri).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        )
     }
 }
