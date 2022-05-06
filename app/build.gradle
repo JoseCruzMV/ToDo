@@ -77,4 +77,7 @@ dependencies {
 
   //Handlebars
   implementation "com.github.jknack:handlebars:4.1.2"
+
+  //Preferences
+  implementation "androidx.preference:preference-ktx:1.2.0"
 }
