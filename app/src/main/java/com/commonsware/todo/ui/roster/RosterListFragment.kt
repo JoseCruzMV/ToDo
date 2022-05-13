@@ -23,17 +23,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 private const val TAG = "ToDo"
 
 class RosterListFragment : Fragment() {
-
     private val motor: RosterMotor by viewModel()
-    private var binding: TodoRosterBinding? = null
     private val menuMap = mutableMapOf<FilterMode, MenuItem>()
+    private var binding: TodoRosterBinding? = null
 
     private val createDoc =
-        registerForActivityResult(ActivityResultContracts.CreateDocument()){
+        registerForActivityResult(ActivityResultContracts.CreateDocument()) {
             motor.saveReport(it)
         }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,20 +42,16 @@ class RosterListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return TodoRosterBinding.inflate(inflater, container, false)
-            .also { binding = it }
-            .root
-    }
+    ): View = TodoRosterBinding.inflate(inflater, container, false)
+        .also { binding = it }
+        .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = RosterAdapter(
             layoutInflater,
-            onCheckboxToggle = {
-                motor.save(it.copy(isCompleted = !it.isCompleted))
-            },
+            onCheckboxToggle = { motor.save(it.copy(isCompleted = !it.isCompleted)) },
             onRowClick = ::display
         )
 
@@ -79,7 +72,7 @@ class RosterListFragment : Fragment() {
                 adapter.submitList(state.items)
 
                 binding?.apply {
-                    loading.visibility = View.GONE
+                    loading.visibility = if (state.isLoaded) View.GONE else View.VISIBLE
 
                     when {
                         state.items.isEmpty() && state.filterMode == FilterMode.ALL -> {
@@ -110,6 +103,7 @@ class RosterListFragment : Fragment() {
 
     override fun onDestroyView() {
         binding = null
+
         super.onDestroyView()
     }
 
@@ -128,36 +122,41 @@ class RosterListFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        when (item.itemId) {
             R.id.add -> {
                 add()
-                true
+                return true
             }
             R.id.all -> {
                 item.isChecked = true
-                motor.load(filterMode = FilterMode.ALL)
-                true
+                motor.load(FilterMode.ALL)
+                return true
             }
             R.id.completed -> {
                 item.isChecked = true
-                motor.load(filterMode = FilterMode.COMPLETED)
-                true
+                motor.load(FilterMode.COMPLETED)
+                return true
             }
             R.id.outstanding -> {
                 item.isChecked = true
-                motor.load(filterMode = FilterMode.OUTSTANDING)
-                true
+                motor.load(FilterMode.OUTSTANDING)
+                return true
             }
             R.id.save -> {
                 saveReport()
-                true
+                return true
             }
             R.id.share -> {
                 motor.shareReport()
-                true
+                return true
             }
-            else -> super.onOptionsItemSelected(item)
+            R.id.importItems -> {
+                motor.importItems()
+                return true
+            }
         }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun display(model: ToDoModel) {
@@ -166,8 +165,7 @@ class RosterListFragment : Fragment() {
     }
 
     private fun add() {
-        findNavController()
-            .navigate(RosterListFragmentDirections.createModel(null))
+        findNavController().navigate(RosterListFragmentDirections.createModel(null))
     }
 
     private fun saveReport() {
@@ -175,13 +173,14 @@ class RosterListFragment : Fragment() {
     }
 
     private fun viewReport(uri: Uri) {
-        safeStarActivity(
-            Intent(Intent.ACTION_VIEW, uri).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        safeStartActivity(
+            Intent(Intent.ACTION_VIEW, uri)
+                .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         )
     }
 
     private fun shareReport(doc: Uri) {
-        safeStarActivity(
+        safeStartActivity(
             Intent(Intent.ACTION_SEND)
                 .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 .setType("text/html")
@@ -189,7 +188,7 @@ class RosterListFragment : Fragment() {
         )
     }
 
-    private fun safeStarActivity(intent: Intent) {
+    private fun safeStartActivity(intent: Intent) {
         try {
             startActivity(intent)
         } catch (t: Throwable) {

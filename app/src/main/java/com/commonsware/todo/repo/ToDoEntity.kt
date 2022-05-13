@@ -5,7 +5,8 @@ import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import java.util.*
 
-@Entity(tableName = "todos", indices = [ Index(value = ["id"]) ])
+
+@Entity(tableName = "todos", indices = [Index(value = ["id"])])
 data class ToDoEntity(
     val description: String,
     @PrimaryKey
@@ -34,8 +35,11 @@ data class ToDoEntity(
 
     @Dao
     interface Store {
-        @Query("SELECT * FROM todos ORDER BY  description")
+        @Query("SELECT * FROM todos ORDER BY description")
         fun all(): Flow<List<ToDoEntity>>
+
+        @Query("SELECT * FROM todos WHERE isCompleted = :isCompleted ORDER BY description")
+        fun filtered(isCompleted: Boolean): Flow<List<ToDoEntity>>
 
         @Query("SELECT * FROM todos WHERE id = :modelId")
         fun find(modelId: String?): Flow<ToDoEntity?>
@@ -43,10 +47,10 @@ data class ToDoEntity(
         @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun save(vararg entities: ToDoEntity)
 
+        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        suspend fun importItems(entities: List<ToDoEntity>)
+
         @Delete
         suspend fun delete(vararg entities: ToDoEntity)
-
-        @Query("SELECT * FROM todos WHERE isCompleted = :isCompleted ORDER BY description")
-        fun filtered(isCompleted: Boolean): Flow<List<ToDoEntity>>
     }
 }

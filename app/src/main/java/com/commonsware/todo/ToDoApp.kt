@@ -2,7 +2,9 @@ package com.commonsware.todo
 
 import android.app.Application
 import android.text.format.DateUtils
+import com.commonsware.todo.repo.PrefsRepository
 import com.commonsware.todo.repo.ToDoDatabase
+import com.commonsware.todo.repo.ToDoRemoteDataSource
 import com.commonsware.todo.repo.ToDoRepository
 import com.commonsware.todo.report.RosterReport
 import com.commonsware.todo.ui.SingleModelMotor
@@ -11,6 +13,7 @@ import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.Helper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -29,7 +32,8 @@ class ToDoApp : Application() {
         single {
             ToDoRepository(
                 get<ToDoDatabase>().todoStore(),
-                get(named("appScope"))
+                get(named("appScope")),
+                get()
             )
         }
         single {
@@ -39,14 +43,24 @@ class ToDoApp : Application() {
                         androidContext(),
                         value.toEpochMilli(),
                         DateUtils.MINUTE_IN_MILLIS,
-                        DateUtils.WEEK_IN_MILLIS,
-                        0
+                        DateUtils.WEEK_IN_MILLIS, 0
                     )
                 })
             }
         }
         single { RosterReport(androidContext(), get(), get(named("appScope"))) }
-        viewModel { RosterMotor(get(), get(), androidApplication(), get(named("appScope"))) }
+        single { OkHttpClient.Builder().build() }
+        single { ToDoRemoteDataSource(get()) }
+        single { PrefsRepository(androidContext()) }
+        viewModel {
+            RosterMotor(
+                get(),
+                get(),
+                androidApplication(),
+                get(named("appScope")),
+                get()
+            )
+        }
         viewModel { (modelId: String) -> SingleModelMotor(get(), modelId) }
     }
 

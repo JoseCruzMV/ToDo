@@ -10,11 +10,13 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.commonsware.todo.R
 import com.commonsware.todo.repo.ToDoDatabase
 import com.commonsware.todo.repo.ToDoModel
+import com.commonsware.todo.repo.ToDoRemoteDataSource
 import com.commonsware.todo.repo.ToDoRepository
 import com.commonsware.todo.ui.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
 import org.junit.Before
 import org.junit.Test
 import org.koin.core.context.loadKoinModules
@@ -34,7 +36,11 @@ class RosterListFragmentTest {
         val db = ToDoDatabase.newTestInstance(context)
         val appScope = CoroutineScope(SupervisorJob())
 
-        repo = ToDoRepository(db.todoStore(), appScope)
+        repo = ToDoRepository(
+            db.todoStore(),
+            appScope,
+            ToDoRemoteDataSource(OkHttpClient())
+        )
 
         loadKoinModules( module {
             single { repo }

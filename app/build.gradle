@@ -80,4 +80,11 @@ dependencies {
 
   //Preferences
   implementation "androidx.preference:preference-ktx:1.2.0"
+
+  //HTTP client
+  implementation "com.squareup.okhttp3:okhttp:4.9.1"
+
+  //JSON parser
+  implementation "com.squareup.moshi:moshi:$moshi_version"
+  kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 }
