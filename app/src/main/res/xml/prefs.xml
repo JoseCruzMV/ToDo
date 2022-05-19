@@ -5,6 +5,9 @@
         android:key="@string/web_service_url_key"
         android:selectAllOnFocus="true"
         android:title="@string/pref_url_title"
-        app:defaultValue="@string/web_service_url_default"
-        />
+        app:defaultValue="@string/web_service_url_default" />
+    <SwitchPreference
+        android:key="@string/import_key"
+        android:title="@string/pref_import_title"
+        app:defaultValue="false" />
 </PreferenceScreen>
