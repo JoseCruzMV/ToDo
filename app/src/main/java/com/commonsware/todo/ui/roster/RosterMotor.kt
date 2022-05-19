@@ -2,6 +2,7 @@ package com.commonsware.todo.ui.roster
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import com.commonsware.todo.repo.PrefsRepository
 import com.commonsware.todo.repo.ToDoModel
 import com.commonsware.todo.repo.ToDoRepository
 import com.commonsware.todo.report.RosterReport
+import com.commonsware.todo.ui.ErrorScenario
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
@@ -42,6 +44,9 @@ class RosterMotor(
 
     private val _navEvents = MutableSharedFlow<Nav>()
     val navEvents = _navEvents.asSharedFlow()
+
+    private val _errorEvents = MutableSharedFlow<ErrorScenario>()
+    val errorEvents = _errorEvents.asSharedFlow()
 
     init {
         load(FilterMode.ALL)
@@ -89,7 +94,12 @@ class RosterMotor(
 
     fun importItems() {
         viewModelScope.launch {
-            repo.importItems(prefs.loadWebServiceUrl())
+            try {
+                repo.importItems(prefs.loadWebServiceUrl())
+            } catch (ex: Exception) {
+                Log.e("ToDo", "Exception importing items", ex)
+                _errorEvents.emit(ErrorScenario.Import)
+            }
         }
     }
 }

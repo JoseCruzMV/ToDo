@@ -17,6 +17,8 @@ import com.commonsware.todo.RosterAdapter
 import com.commonsware.todo.databinding.TodoRosterBinding
 import com.commonsware.todo.repo.FilterMode
 import com.commonsware.todo.repo.ToDoModel
+import com.commonsware.todo.ui.ErrorDialogFragment
+import com.commonsware.todo.ui.ErrorScenario
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -99,6 +101,28 @@ class RosterListFragment : Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            motor.errorEvents.collect { error ->
+                when (error) {
+                    ErrorScenario.Import -> handleImportError()
+                }
+            }
+        }
+
+        findNavController()
+            .getBackStackEntry(R.id.rosterListFragment)
+            .savedStateHandle
+            .getLiveData<ErrorScenario>(ErrorDialogFragment.KEY_RETRY)
+            .observe(viewLifecycleOwner) { retryScenario ->
+                when(retryScenario) {
+                    ErrorScenario.Import -> {
+                        clearImportError()
+                        motor.importItems()
+                    }
+                }
+
+            }
     }
 
     override fun onDestroyView() {
@@ -195,5 +219,22 @@ class RosterListFragment : Fragment() {
             Log.e(TAG, "Exception starting $intent", t)
             Toast.makeText(requireActivity(), R.string.oops, Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun handleImportError() {
+        findNavController().navigate(
+            RosterListFragmentDirections.showError(
+                title = getString(R.string.import_error_title),
+                message = getString(R.string.import_error_message),
+                scenario = ErrorScenario.Import
+            )
+        )
+    }
+
+    private fun clearImportError() {
+        findNavController()
+            .getBackStackEntry(R.id.rosterListFragment)
+            .savedStateHandle
+            .set(ErrorDialogFragment.KEY_RETRY, ErrorScenario.None)
     }
 }
